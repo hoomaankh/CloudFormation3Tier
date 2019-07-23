@@ -1002,7 +1002,6 @@
       }
     }
 
-  },
   "HoomaanAutoScaleGroup": {
     "Type": "AWS::AutoScaling::AutoScalingGroup",
     "Properties": {
@@ -1130,7 +1129,9 @@
       }
   
     }
+  }
   },
   "Description": ""
 }
+
 
