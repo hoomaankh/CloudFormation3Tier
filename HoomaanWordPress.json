@@ -1,0 +1,941 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "HoomaanVPC": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": "10.1.0.0/16",
+        "InstanceTenancy": "default",
+        "EnableDnsSupport": "true",
+        "EnableDnsHostnames": "false",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "3TierVPC"
+          }
+        ]
+      }
+    },
+    "HoomaanPrivateAZ2Subnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.1.12.0/24",
+        "AvailabilityZone": "ap-southeast-2b",
+        "VpcId": {
+          "Ref": "HoomaanVPC"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "HoomaanPrivateAZ2"
+          }
+        ]
+      }
+    },
+    "Hoomaan3rdTierAZ2": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.1.22.0/24",
+        "AvailabilityZone": "ap-southeast-2b",
+        "VpcId": {
+          "Ref": "HoomaanVPC"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "HoomaanThirdTierAZ2"
+          }
+        ]
+      }
+    },
+    "HoomaanPublicAZ1": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.1.1.0/24",
+        "AvailabilityZone": "ap-southeast-2a",
+        "VpcId": {
+          "Ref": "HoomaanVPC"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "HoomaanPublicAZ1"
+          }
+        ]
+      }
+    },
+    "Hoomaan3rdTierAZ1": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.1.21.0/24",
+        "AvailabilityZone": "ap-southeast-2a",
+        "VpcId": {
+          "Ref": "HoomaanVPC"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Hoomaan3rdTierAZ1"
+          }
+        ]
+      }
+    },
+    "HoomaanPrivateAZ1": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.1.11.0/24",
+        "AvailabilityZone": "ap-southeast-2a",
+        "VpcId": {
+          "Ref": "HoomaanVPC"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "HoomaanPrivateAZ1"
+          }
+        ]
+      }
+    },
+    "HoomaanPublicAZ2": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.1.2.0/24",
+        "AvailabilityZone": "ap-southeast-2b",
+        "VpcId": {
+          "Ref": "HoomaanVPC"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "HoomaanPublicAZ2"
+          }
+        ]
+      }
+    },
+    "HoomaanIGW": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "HoomaanIGW"
+          }
+        ]
+      }
+    },
+    "HoomaanDNS": {
+      "Type": "AWS::EC2::DHCPOptions",
+      "Properties": {
+        "DomainName": "ap-southeast-2.compute.internal",
+        "DomainNameServers": [
+          "AmazonProvidedDNS"
+        ]
+      }
+    },
+    "HoomaanNACLPrivate": {
+      "Type": "AWS::EC2::NetworkAcl",
+      "Properties": {
+        "VpcId": {
+          "Ref": "HoomaanVPC"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "HoomaanNACLPrivate"
+          }
+        ]
+      }
+    },
+    "HoomaanNACLProvate2": {
+      "Type": "AWS::EC2::NetworkAcl",
+      "Properties": {
+        "VpcId": {
+          "Ref": "HoomaanVPC"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "HoomaanNACLPrivate2"
+          }
+        ]
+      }
+    },
+    "HoomaanNACLPublic": {
+      "Type": "AWS::EC2::NetworkAcl",
+      "Properties": {
+        "VpcId": {
+          "Ref": "HoomaanVPC"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "HoomaanNACLPublic"
+          }
+        ]
+      }
+    },
+    "HoomaanRouteTable1": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "HoomaanVPC"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "HoomaanRouteTable1"
+          }
+        ]
+      }
+    },
+    "HoomaanRouteFree": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "HoomaanVPC"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "HoomaanRouteFree"
+          }
+        ]
+      }
+    },
+    "HoomaanRoutePublic": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "HoomaanVPC"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "HoomaanPublic"
+          }
+        ]
+      }
+    },
+    "ElasticIP1": {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "Domain": "vpc"
+      }
+    },
+    "ElasticIP2": {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "Domain": "vpc"
+      }
+    },
+
+    "HoomaanEC2PrivateAZ1": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "DisableApiTermination": "false",
+        "InstanceInitiatedShutdownBehavior": "stop",
+        "ImageId": "ami-0dc96254d5535925f",
+        "InstanceType": "t2.nano",
+        "KeyName": "NewKeyPairOZ",
+        "Monitoring": "false",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "HoomaanPrivateEC2AZ1"
+          }
+        ],
+        "NetworkInterfaces": [
+          {
+            "DeleteOnTermination": "true",
+            "Description": "Primary network interface",
+            "DeviceIndex": 0,
+            "SubnetId": {
+              "Ref": "HoomaanPrivateAZ1"
+            },
+            "PrivateIpAddresses": [
+              {
+                "PrivateIpAddress": "10.1.11.146",
+                "Primary": "true"
+              }
+            ],
+            "GroupSet": [
+              {
+                "Ref": "SecurityGroupPrivate"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "HoomaanEC2PublicAZ2": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "DisableApiTermination": "false",
+        "InstanceInitiatedShutdownBehavior": "stop",
+        "ImageId": "ami-0dc96254d5535925f",
+        "InstanceType": "t2.nano",
+        "KeyName": "NewKeyPairOZ",
+        "Monitoring": "false",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "BelongPublicEC2AZ2"
+          }
+        ],
+        "NetworkInterfaces": [
+          {
+            "DeleteOnTermination": "true",
+            "Description": "Primary network interface",
+            "DeviceIndex": 0,
+            "SubnetId": {
+              "Ref": "HoomaanPublicAZ2"
+            },
+            "PrivateIpAddresses": [
+              {
+                "PrivateIpAddress": "10.1.2.188",
+                "Primary": "true"
+              }
+            ],
+            "GroupSet": [
+              {
+                "Ref": "SecurityGroupPrivate"
+              }
+            ],
+            "AssociatePublicIpAddress": "true"
+          }
+        ]
+      }
+    },
+    "HoomaanEC2PrivateAZ2": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "DisableApiTermination": "false",
+        "InstanceInitiatedShutdownBehavior": "stop",
+        "ImageId": "ami-0dc96254d5535925f",
+        "InstanceType": "t2.nano",
+        "KeyName": "NewKeyPairOZ",
+        "Monitoring": "false",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "HoomaanPrivateEC2AZ2"
+          }
+        ],
+        "NetworkInterfaces": [
+          {
+            "DeleteOnTermination": "true",
+            "Description": "Primary network interface",
+            "DeviceIndex": 0,
+            "SubnetId": {
+              "Ref": "HoomaanPrivateAZ2Subnet"
+            },
+            "PrivateIpAddresses": [
+              {
+                "PrivateIpAddress": "10.1.12.180",
+                "Primary": "true"
+              }
+            ],
+            "GroupSet": [
+              {
+                "Ref": "SecurityGroupPrivate"
+              }
+            ]
+          }
+        ]
+      }
+    },
+
+  
+    "HoomaanEC2PublicAZ1": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "DisableApiTermination": "false",
+        "InstanceInitiatedShutdownBehavior": "stop",
+        "IamInstanceProfile": "EC2ToS3",
+        "ImageId": "ami-0dc96254d5535925f",
+        "InstanceType": "t2.nano",
+        "KeyName": "NewKeyPairOZ",
+        "Monitoring": "false",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "HoomaanPublicEC2AZ1"
+          }
+        ],
+        "NetworkInterfaces": [
+          {
+            "DeleteOnTermination": "true",
+            "Description": "Primary network interface",
+            "DeviceIndex": 0,
+            "SubnetId": {
+              "Ref": "HoomaanPublicAZ1"
+            },
+            "PrivateIpAddresses": [
+              {
+                "PrivateIpAddress": "10.1.1.172",
+                "Primary": "true"
+              }
+            ],
+            "GroupSet": [
+              {
+                "Ref": "HoomaanPublicSecurityGroup"
+              }
+            ],
+            "AssociatePublicIpAddress": "true"
+          }
+        ]
+      }
+    },
+    "HoomaanBastinHost": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "DisableApiTermination": "false",
+        "InstanceInitiatedShutdownBehavior": "stop",
+        "ImageId": "ami-0dc96254d5535925f",
+        "InstanceType": "t2.small",
+        "KeyName": "NewKeyPairOZ",
+        "Monitoring": "false",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "HoomaanBastinHost"
+          }
+        ],
+        "NetworkInterfaces": [
+          {
+            "DeleteOnTermination": "true",
+            "Description": "Primary network interface",
+            "DeviceIndex": 0,
+            "SubnetId": {
+              "Ref": "HoomaanPublicAZ1"
+            },
+            "PrivateIpAddresses": [
+              {
+                "PrivateIpAddress": "10.1.1.20",
+                "Primary": "true"
+              }
+            ],
+            "GroupSet": [
+              {
+                "Ref": "HoomaanSecurityGroupBastinHost"
+              }
+            ],
+            "AssociatePublicIpAddress": "true"
+          }
+        ]
+      }
+    },
+    "HoomaanRDS": {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "AllocatedStorage": "20",
+        "AllowMajorVersionUpgrade": "false",
+        "AutoMinorVersionUpgrade": "true",
+        "DBInstanceClass": "db.t2.micro",
+        "Port": "3306",
+        "StorageType": "gp2",
+        "BackupRetentionPeriod": "7",
+        "MasterUsername": "admin1",
+        "MasterUserPassword": "MyPassword",
+        "PreferredBackupWindow": "19:17-19:47",
+        "PreferredMaintenanceWindow": "fri:17:26-fri:17:56",
+        "DBName": "MyDatabase",
+        "Engine": "mysql",
+        "EngineVersion": "5.7.22",
+        "LicenseModel": "general-public-license",
+        "MultiAZ": "true",
+        "DBSubnetGroupName": {
+          "Ref": "HoomaanDBSubnetGroup"
+        },
+        "VPCSecurityGroups": [
+          {
+            "Ref": "HoomaanSecurityGroupRDS"
+          }
+        ]
+      }
+    },
+    "HoomaanNewS3V1": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "AccessControl": "Private",
+        "VersioningConfiguration": {
+          "Status": "Enabled"
+        }
+      }
+    },
+    "HoomaanDBSubnetGroup": {
+      "Type": "AWS::RDS::DBSubnetGroup",
+      "Properties": {
+        "DBSubnetGroupDescription": "Created from the RDS Management Console",
+        "SubnetIds": [
+          {
+            "Ref": "HoomaanPublicAZ2"
+          },
+          {
+            "Ref": "HoomaanPrivateAZ1"
+          },
+          {
+            "Ref": "Hoomaan3rdTierAZ1"
+          },
+          {
+            "Ref": "HoomaanPublicAZ1"
+          },
+          {
+            "Ref": "Hoomaan3rdTierAZ2"
+          },
+          {
+            "Ref": "HoomaanPrivateAZ2Subnet"
+          }
+        ]
+      }
+    },
+    "SecurityGroupPrivate": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "launch-wizard-3 created 2019-07-21T03:52:52.088+10:00",
+        "VpcId": {
+          "Ref": "HoomaanVPC"
+        }
+      }
+    },
+    "HoomaanSecurityGroupBastinHost": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "BastinHost",
+        "VpcId": {
+          "Ref": "HoomaanVPC"
+        }
+      }
+    },
+    "HoomaanPublicSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "launch-wizard-3 created 2019-07-21T03:49:24.527+10:00",
+        "VpcId": {
+          "Ref": "HoomaanVPC"
+        }
+      }
+    },
+    "HoomaanSecurityGroupRDS": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Belong-RDS-SecurityGroup",
+        "VpcId": {
+          "Ref": "HoomaanVPC"
+        }
+      }
+    },
+    "dbsgdefault": {
+      "Type": "AWS::RDS::DBSecurityGroup",
+      "Properties": {
+        "GroupDescription": "default"
+      }
+    },
+    "HoomaanNetworkACL100x1": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "CidrBlock": "10.1.1.20/32",
+        "Egress": "true",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "RuleNumber": "100",
+        "PortRange": {
+          "From": "1024",
+          "To": "65535"
+        },
+        "NetworkAclId": {
+          "Ref": "HoomaanNACLPrivate"
+        }
+      }
+    },
+    "HoomaanNetworkACL100x2": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "CidrBlock": "10.1.1.20/32",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "RuleNumber": "100",
+        "PortRange": {
+          "From": "22",
+          "To": "22"
+        },
+        "NetworkAclId": {
+          "Ref": "HoomaanNACLPrivate"
+        }
+      }
+    },
+    "HoomaanNetworkACL100x3": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "CidrBlock": "0.0.0.0/0",
+        "Egress": "true",
+        "Protocol": "-1",
+        "RuleAction": "allow",
+        "RuleNumber": "100",
+        "NetworkAclId": {
+          "Ref": "HoomaanNACLProvate2"
+        }
+      }
+    },
+    "HoomaanNetworkACL100x4": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "CidrBlock": "0.0.0.0/0",
+        "Protocol": "-1",
+        "RuleAction": "allow",
+        "RuleNumber": "100",
+        "NetworkAclId": {
+          "Ref": "HoomaanNACLProvate2"
+        }
+      }
+    },
+    "HoomaanNetworkACL100x5": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "CidrBlock": "0.0.0.0/0",
+        "Egress": "true",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "RuleNumber": "100",
+        "PortRange": {
+          "From": "80",
+          "To": "80"
+        },
+        "NetworkAclId": {
+          "Ref": "HoomaanNACLPublic"
+        }
+      }
+    },
+    "HoomaanNetworkACL100x6": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "CidrBlock": "10.1.1.20/32",
+        "Egress": "true",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "RuleNumber": "101",
+        "PortRange": {
+          "From": "1024",
+          "To": "65535"
+        },
+        "NetworkAclId": {
+          "Ref": "HoomaanNACLPublic"
+        }
+      }
+    },
+    "HoomaanNetworkACL100x7": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "CidrBlock": "0.0.0.0/0",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "RuleNumber": "100",
+        "PortRange": {
+          "From": "80",
+          "To": "80"
+        },
+        "NetworkAclId": {
+          "Ref": "HoomaanNACLPublic"
+        }
+      }
+    },
+    "HoomaanNetworkACL101x8": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "CidrBlock": "10.1.1.20/32",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "RuleNumber": "101",
+        "PortRange": {
+          "From": "22",
+          "To": "22"
+        },
+        "NetworkAclId": {
+          "Ref": "HoomaanNACLPublic"
+        }
+      }
+    },
+    "HoomaanSubnetAssociate1": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "HoomaanNACLProvate2"
+        },
+        "SubnetId": {
+          "Ref": "Hoomaan3rdTierAZ1"
+        }
+      }
+    },
+    "HoomaanSubnetAssociate2": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "HoomaanNACLProvate2"
+        },
+        "SubnetId": {
+          "Ref": "Hoomaan3rdTierAZ2"
+        }
+      }
+    },
+    "HoomaanSubnetAssociate3": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "HoomaanNACLProvate2"
+        },
+        "SubnetId": {
+          "Ref": "HoomaanPublicAZ1"
+        }
+      }
+    },
+    "HoomaanSubnetAssociate4": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "HoomaanNACLProvate2"
+        },
+        "SubnetId": {
+          "Ref": "HoomaanPublicAZ2"
+        }
+      }
+    },
+    "HoomaanSubnetAssociate5": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "HoomaanNACLProvate2"
+        },
+        "SubnetId": {
+          "Ref": "HoomaanPrivateAZ1"
+        }
+      }
+    },
+    "HoomaanSubnetAssociate6": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "HoomaanNACLProvate2"
+        },
+        "SubnetId": {
+          "Ref": "HoomaanPrivateAZ2Subnet"
+        }
+      }
+    },
+    "HoomaanInternetGW": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {
+          "Ref": "HoomaanVPC"
+        },
+        "InternetGatewayId": {
+          "Ref": "HoomaanIGW"
+        }
+      }
+    },
+    "HoomaanSubnetRouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "HoomaanRouteTable1"
+        },
+        "SubnetId": {
+          "Ref": "HoomaanPrivateAZ1"
+        }
+      }
+    },
+    "HoomaanRouteOutgoing": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "HoomaanRouteTable1"
+        },
+        "SubnetId": {
+          "Ref": "HoomaanPrivateAZ2Subnet"
+        }
+      }
+    },
+    "HoomaanSubnetRouteAssociate": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "HoomaanRoutePublic"
+        },
+        "SubnetId": {
+          "Ref": "HoomaanPublicAZ2"
+        }
+      }
+    },
+    "HoomaanRouteAssociate5": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "HoomaanRoutePublic"
+        },
+        "SubnetId": {
+          "Ref": "HoomaanPublicAZ1"
+        }
+      }
+    },
+    "HoomaanRoute1": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "RouteTableId": {
+          "Ref": "HoomaanRoutePublic"
+        },
+        "GatewayId": {
+          "Ref": "HoomaanIGW"
+        }
+      },
+      "DependsOn": "HoomaanInternetGW"
+    },
+    "HoomaanVPCDHCPAssociate": {
+      "Type": "AWS::EC2::VPCDHCPOptionsAssociation",
+      "Properties": {
+        "VpcId": {
+          "Ref": "HoomaanVPC"
+        },
+        "DhcpOptionsId": {
+          "Ref": "HoomaanDNS"
+        }
+      }
+    },
+    "HoomaanIngressSecurityGroup1": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "SecurityGroupPrivate"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "CidrIp": "10.1.1.20/32"
+      }
+    },
+    "HoomaanIngressSecurityGroup2": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "HoomaanSecurityGroupBastinHost"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "HoomaanIngressSecurityGroup3": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "HoomaanPublicSecurityGroup"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "80",
+        "ToPort": "80",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "ingress4": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "HoomaanPublicSecurityGroup"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "CidrIp": "10.1.1.20/32"
+      }
+    },
+    "HoomaanIngressSecurityGroup5": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "HoomaanPublicSecurityGroup"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "HoomaanIngressSecurityGroup6": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "HoomaanPublicSecurityGroup"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "3306",
+        "ToPort": "3306",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "HoomaanIngressSecurityGroup7": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "HoomaanSecurityGroupRDS"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "CidrIp": "10.1.0.0/16"
+      }
+    },
+    "HoomaanIngressSecurityGroup8": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "HoomaanSecurityGroupRDS"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "3306",
+        "ToPort": "3306",
+        "CidrIp": "10.1.0.0/16"
+      }
+    },
+    "HoomaanEgressSecurityGroup1": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "SecurityGroupPrivate"
+        },
+        "IpProtocol": "-1",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "HoomaanEgressSecurityGroup2": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "HoomaanSecurityGroupBastinHost"
+        },
+        "IpProtocol": "-1",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "HoomaanEgressSecurityGroup3": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "HoomaanPublicSecurityGroup"
+        },
+        "IpProtocol": "-1",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "HoomaanEgressSecurityGroup4": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "HoomaanSecurityGroupRDS"
+        },
+        "IpProtocol": "-1",
+        "CidrIp": "0.0.0.0/0"
+      }
+    }
+  },
+  "Description": ""
+}
