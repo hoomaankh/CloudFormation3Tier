@@ -935,7 +935,73 @@
         "IpProtocol": "-1",
         "CidrIp": "0.0.0.0/0"
       }
+    },
+    "WordPressSite": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "DisableApiTermination": "false",
+        "InstanceInitiatedShutdownBehavior": "stop",
+        "ImageId": "ami-0dc96254d5535925f",
+        "InstanceType": "t2.small",
+        "KeyName": "NewKeyPairOZ",
+        "Monitoring": "false",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "WordPressSite"
+          }
+        ],
+        "NetworkInterfaces": [
+          {
+            "DeleteOnTermination": "true",
+            "Description": "Primary network interface",
+            "DeviceIndex": 0,
+            "SubnetId": {
+              "Ref": "HoomaanPublicAZ1"
+            },
+            "PrivateIpAddresses": [
+              {
+                "PrivateIpAddress": "10.1.1.21",
+                "Primary": "true"
+              }
+            ],
+            "GroupSet": [
+              {
+                "Ref": "HoomaanBastinHost"
+              }
+            ]
+          }
+        ],
+        "UserData": {
+          "Fn::Base64": {
+              "Fn::Join": [
+                  "",
+                  [
+                      "#!/bin/bash",
+                      "yum update -y",
+                      "yum install httpd php php-mysql -y",
+                      "cd /var/www/html",
+                      "echo \"healthy\" > healthy.html"
+                      "wget https://wordpress.org/wordpress-5.1.1.tar.gz",
+                      "tar -xzf wordpress-5.1.1.tar.gz",
+                      "cp -r wordpress/* /var/www/html/",
+                      "rm -rf wordpress",
+                      "rm -rf wordpress-5.1.1.tar.gz",
+                      "chmod -R 755 wp-content",
+                      "chown -R apache:apache wp-content",
+                      "wget https://s3.amazonaws.com/bucketforwordpresslab-donotdelete/htaccess.txt",
+                      "mv htaccess.txt .htaccess",
+                      "chkconfig httpd on",
+                      "service httpd start",
+                      "Service httpd enabled"
+                  ]
+              ]
+          }
+        }
+      }
     }
+
+
   },
   "Description": ""
 }
