@@ -1002,7 +1002,135 @@
       }
     }
 
+  },
+  "HoomaanAutoScaleGroup": {
+    "Type": "AWS::AutoScaling::AutoScalingGroup",
+    "Properties": {
+      "AvailabilityZones": [
+        "ap-southeast-2b",
+        "ap-southeast-2a"
+      ],
+      "Cooldown": "300",
+      "DesiredCapacity": "2",
+      "HealthCheckGracePeriod": "297",
+      "HealthCheckType": "ELB",
+      "MaxSize": "2",
+      "MinSize": "2",
+      "VPCZoneIdentifier": [
+        {
+          "Ref": "HoomaanPublicAZ1"
+        },
+        {
+          "Ref": "HoomaanPublicAZ2"
+        }
+      ],
+      "LaunchConfigurationName": {
+        "Ref": "HoomaanAutoScalingLaunch"
+      },
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": "Hoomaan-AutoScaling",
+          "PropagateAtLaunch": true
+        }
+      ],
+      "TerminationPolicies": [
+        "Default"
+      ]
+    }
+  },
+  "HoomaanAutoScalingLaunch": {
+    "Type": "AWS::AutoScaling::LaunchConfiguration",
+    "Properties": {
+      "ImageId": "ami-06f6620fb1223ae84",
+      "InstanceType": "t2.small",
+      "KeyName": "NewKeyPairOZ",
+      "IamInstanceProfile": "EC2ToS3",
+      "SecurityGroups": [
+        {
+          "Ref": "HoomaanPublicSecurityGroup"
+        }
+      ],
+      "BlockDeviceMappings": [
+        {
+          "DeviceName": "/dev/xvda",
+          "Ebs": {
+            "SnapshotId": "snap-0033fc16e4f0d8574",
+            "VolumeSize": 8
+          }
+        }
+      ],
 
+
+        "UserData": {
+          "Fn::Base64": {
+              "Fn::Join": [
+                  "",
+                  [
+                      "#!/bin/bash\n",
+                      "aws s3 sync cp s3://pipelineofhoomaan/Site/wordpress /var/www/html\n",
+                      "aws s3 sync cp s3://pipelineofhoomaan/Code/wpcontent /var/www/html/wp-content/uploads s3://pipelineofhoomaan/Code/wpcontent\n"
+
+                  ]
+              ]
+          }
+        }
+    }
+  },
+  "HoomaanAutoScaleEC2": {
+    "Type": "AWS::EC2::Instance",
+    "Properties": {
+      "DisableApiTermination": "false",
+      "InstanceInitiatedShutdownBehavior": "stop",
+      "ImageId": "ami-06f6620fb1223ae84",
+      "InstanceType": "t2.small",
+      "KeyName": "NewKeyPairOZ",
+      "Monitoring": "false",
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": "HoomaanAutoScaling"
+        }
+      ],
+      "NetworkInterfaces": [
+        {
+          "DeleteOnTermination": "true",
+          "Description": "Primary network interface",
+          "DeviceIndex": 0,
+          "SubnetId": {
+            "Ref": "HoomaanPublicAZ1"
+          },
+          "PrivateIpAddresses": [
+            {
+              "PrivateIpAddress": "10.1.11.25",
+              "Primary": "true"
+            }
+          ],
+          "GroupSet": [
+            {
+              "Ref": "HoomaanPublicSecurityGroup"
+            }
+          ]
+        }
+      ],
+
+
+      "UserData": {
+        "Fn::Base64": {
+            "Fn::Join": [
+                "",
+                [
+                    "#!/bin/bash\n",
+                    "aws s3 sync cp s3://pipelineofhoomaan/Site/wordpress /var/www/html\n",
+                    "aws s3 sync cp s3://pipelineofhoomaan/Code/wpcontent /var/www/html/wp-content/uploads s3://pipelineofhoomaan/Code/wpcontent\n"
+
+                ]
+            ]
+        }
+      }
+  
+    }
   },
   "Description": ""
 }
+
