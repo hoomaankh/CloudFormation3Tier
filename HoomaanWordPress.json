@@ -969,7 +969,8 @@
               {
                 "Ref": "HoomaanSecurityGroupBastinHost"
               }
-            ]
+            ],
+            "AssociatePublicIpAddress": "true"
           }
         ],
         "UserData": {
