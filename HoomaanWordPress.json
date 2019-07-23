@@ -967,7 +967,7 @@
             ],
             "GroupSet": [
               {
-                "Ref": "HoomaanSecurityGroupBastinHost"
+                "Ref": "HoomaanPublicSecurityGroup"
               }
             ],
             "AssociatePublicIpAddress": "true"
