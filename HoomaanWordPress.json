@@ -967,7 +967,7 @@
             ],
             "GroupSet": [
               {
-                "Ref": "HoomaanBastinHost"
+                "Ref": "HoomaanSecurityGroupBastinHost"
               }
             ]
           }
