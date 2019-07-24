@@ -1168,7 +1168,7 @@
             },
             "PrivateIpAddresses": [
               {
-                "PrivateIpAddress": "10.1.1.172",
+                "PrivateIpAddress": "10.1.1.30",
                 "Primary": "true"
               }
             ],
