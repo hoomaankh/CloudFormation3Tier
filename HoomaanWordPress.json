@@ -1141,7 +1141,48 @@
       }
   
     }
-  }
+  },
+       "HoomaanEC2PublicAZ1x2": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "DisableApiTermination": "false",
+        "InstanceInitiatedShutdownBehavior": "stop",
+        "IamInstanceProfile": "CodeDeployDemo-EC2-Instance-Profile",
+        "ImageId": "ami-0dc96254d5535925f",
+        "InstanceType": "t2.nano",
+        "KeyName": "NewKeyPairOZ",
+        "Monitoring": "false",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "HoomaanPublicEC2AZ1"
+          }
+        ],
+        "NetworkInterfaces": [
+          {
+            "DeleteOnTermination": "true",
+            "Description": "Primary network interface",
+            "DeviceIndex": 0,
+            "SubnetId": {
+              "Ref": "HoomaanPublicAZ1"
+            },
+            "PrivateIpAddresses": [
+              {
+                "PrivateIpAddress": "10.1.1.172",
+                "Primary": "true"
+              }
+            ],
+            "GroupSet": [
+              {
+                "Ref": "HoomaanPublicSecurityGroup"
+              }
+            ],
+            "AssociatePublicIpAddress": "true"
+          }
+        ]
+      }
+    } 
+   
   },
   "Description": ""
 }
