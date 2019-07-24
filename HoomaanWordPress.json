@@ -1191,7 +1191,7 @@
                     "cd /home/ec2-user\n",
                     "aws s3 cp s3://aws-codedeploy-us-east-2/latest/install . --region us-east-2\n",
                     "chmod +x ./install\n",
-                    "./install auto\n",
+                    "./install auto\n"
 
 
 
