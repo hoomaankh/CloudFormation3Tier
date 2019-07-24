@@ -1022,11 +1022,11 @@
         "ap-southeast-2a"
       ],
       "Cooldown": "300",
-      "DesiredCapacity": "3",
+      "DesiredCapacity": "1",
       "HealthCheckGracePeriod": "297",
       "HealthCheckType": "ELB",
-      "MaxSize": "4",
-      "MinSize": "3",
+      "MaxSize": "1",
+      "MinSize": "1",
       "VPCZoneIdentifier": [
         {
           "Ref": "HoomaanPublicAZ1"
