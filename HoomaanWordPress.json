@@ -1168,7 +1168,7 @@
             },
             "PrivateIpAddresses": [
               {
-                "PrivateIpAddress": "10.1.1.31",
+                "PrivateIpAddress": "10.1.1.172",
                 "Primary": "true"
               }
             ],
@@ -1178,7 +1178,8 @@
               }
             ],
             "AssociatePublicIpAddress": "true"
-          },
+          }
+          ],
             "UserData": {
                "Fn::Base64": {
                "Fn::Join": [
@@ -1199,8 +1200,6 @@
             ]
         }
       }
-
-        ]
       }
     } 
    
